@@ -10,12 +10,18 @@ preco(participant5, 90).*/
     <- .my_name(Me);
        .print("Eu sou o participant.");
        .wait(1000);
-       .send(initiator, tell, registrar(Me)).
+       .df_search("initiator",Initiators);
+       .print("Initiators encontrados: ", Initiators);
+       !registrar_em_initiators(Initiators, Me).
+     
++!registrar_em_initiators([], Me)
+    <- .print(Me, " terminou o registro nos initiators.").
 
-+ola[source(Sender)]
-    <- .print("Recebi 'ola' de ", Sender);
-       .send(Sender, tell, resposta).
-
++!registrar_em_initiators([I|Resto], Me)
+    <- .print(Me, " registrando em ", I);
+       .send(I, tell, registrar(Me));
+       !registrar_em_initiators(Resto, Me).
+       
 +cfp(Servico)[source(Sender)]
     <- .print("Recebi um CFP de ", Sender);
        .print("Servico solicitado: ", Servico);

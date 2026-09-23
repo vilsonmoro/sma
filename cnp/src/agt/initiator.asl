@@ -5,7 +5,10 @@ contador_propostas(0).
 !start.
 
 +!start
-    <- .print("Eu sou o initiator.");
+    <- .my_name(Me);
+       .print("Eu sou o ", Me);
+       .df_register("initiator");
+       .print("Registrado no DF como initiator");
        .print("Aguardando registro dos participants.").
        
 @receber_registro[atomic]

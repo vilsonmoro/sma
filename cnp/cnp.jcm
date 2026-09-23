@@ -14,21 +14,14 @@
 
 mas cnp {
 
-    agent initiator: initiator.asl
-     agent participant1: participant.asl
-    agent participant2: participant.asl
-    agent participant3: participant.asl
-    agent participant4: participant.asl
-    agent participant5: participant.asl
-
-   /* agent participant: participant.asl
-
-    agent bob: sample_agent.asl {
-      focus: w.c1 
+    agent initiator: initiator.asl{
+        instances: 5
+        beliefs: total_participants(6)
+    }
+    
+    agent participant: participant.asl{
+      instances: 6
     }
 
-    workspace w {
-      artifact c1: example.Counter(3) 
-    }    */
-
 }
+
