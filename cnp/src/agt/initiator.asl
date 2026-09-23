@@ -1,10 +1,8 @@
 
-total_participants(5).
 contador_registros(0).
 contador_propostas(0).
 
 !start.
-
 
 +!start
     <- .print("Eu sou o initiator.");
@@ -84,33 +82,11 @@ contador_propostas(0).
 
 
 +!selecionar_melhor(Servico)
-    <- .findall([Preco,Agente], proposta_recebida(
-               Agente,
-               Servico,
-               Preco
-           ),
-           Propostas
-       );
-
-       .print(
-           "Propostas para selecao: ",
-           Propostas
-       );
-
-       .sort(
-           Propostas,
-           Ordenadas
-       );
-
-       .print(
-           "Propostas ordenadas: ",
-           Ordenadas
-       );
-
-       !processar_melhor(
-           Servico,
-           Ordenadas
-       ).
+    <- .findall([Preco,Agente], proposta_recebida(Agente, Servico, Preco), Propostas);
+       .print("Propostas para selecao: ",Propostas);
+       .sort(Propostas, Ordenadas);
+       .print("Propostas ordenadas: ",Ordenadas);
+       !processar_melhor(Servico, Ordenadas ).
 
 
 // ======================================================
@@ -121,9 +97,7 @@ contador_propostas(0).
     <- .print("Melhor proposta encontrada.");
        .print("Vencedor = ", Vencedor);
        .print("Preco = ", Preco);
-
        .send(Vencedor, tell, accept(Servico));
-
        !rejeitar_propostas(Servico, Restantes).
 
 

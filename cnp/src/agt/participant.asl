@@ -1,10 +1,10 @@
 !start.
 
-preco(participant1, 100).
+/*preco(participant1, 100).
 preco(participant2, 80).
 preco(participant3, 120).
 preco(participant4, 70).
-preco(participant5, 90).
+preco(participant5, 90).*/
 
 +!start
     <- .my_name(Me);
@@ -22,18 +22,10 @@ preco(participant5, 90).
        .my_name(Me);
        !fazer_proposta(Me, Sender, Servico).
 
-/*+!fazer_proposta(participant1, Sender, Servico)
-    <- .print("Minha proposta para ", Servico, " e 100");
-       .send(Sender, tell, proposta(Servico, 100)).
-
-+!fazer_proposta(participant2, Sender, Servico)
-    <- .print("Minha proposta para ", Servico, " e 80");
-       .send(Sender, tell, proposta(Servico, 80)).*/
-
 +!fazer_proposta(Me, Sender, Servico)
-    : preco(Me, Preco)
-    <- .print("Minha proposta para ", Servico,
-              " e ", Preco);
+    <- .random(R);
+       Preco = math.floor(50 + R * 100);
+       .print("Minha proposta para ", Servico, " e ", Preco);
        .send(Sender, tell, proposta(Servico, Preco)).
 
 +accept(Servico)[source(Sender)]
