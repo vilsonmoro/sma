@@ -12,13 +12,14 @@ contador_propostas(0).
        .print("Aguardando registro dos participants.").
        
 @receber_registro[atomic]
-+registrar(Agente)[source(Sender)]
++registrar(Agente, Servico)[source(Sender)]
     : contador_registros(N) & total_participants(Total)
     <- +participant(Agente);
+       +oferece(Agente, Servico);
        NovoN = N + 1;
        -contador_registros(N);
        +contador_registros(NovoN);
-       .print("Participant registrado: ", Agente );
+       .print("Participant registrado: ", Agente, " serviço: ", Servico );
        .print("Participants registrados: ", NovoN, " de ", Total  );
        !verificar_registros(NovoN,Total).
 
@@ -27,17 +28,38 @@ contador_propostas(0).
     <- true.
 
 +!verificar_registros(Quantidade, Total)
-    : Quantidade == Total
+    : Quantidade == Total & total_cnps(I)
     <- .print("Todos os participants foram registrados.");
-       +contador_propostas(cnp1,0);
-       +contador_propostas(cnp2,0);
-       !enviar_cfp(cnp1, transporte);
-       !enviar_cfp(cnp2, limpeza).
+       .print("Quantidade de CNPs que serão executadas: ",I);
+       !criar_cnps(1,I).
+    
++!criar_cnps(Atual, Total)
+    : Atual > Total
+    <- .print("Todos os ", Total, " CNPs foram iniciados.").
+
++!iniciar_cnp(CnpId, Numero)
+    : Numero mod 2 == 1
+    <- !!enviar_cfp(CnpId, transporte).
+
+
++!iniciar_cnp(CnpId, Numero)
+    : Numero mod 2 == 0
+    <- !!enviar_cfp(CnpId, limpeza).
+
++!criar_cnps(Atual, Total)
+    : Atual <= Total
+    <- CnpId = cnp(Atual);
+       +contador_propostas(CnpId, 0);
+       .print("Criando ", CnpId);
+       !iniciar_cnp(CnpId, Atual);
+       Proximo = Atual + 1;
+       !criar_cnps(Proximo, Total).
+
 
 +!enviar_cfp(CnpId, Servico)
-    <- .findall(P, participant(P), Participants);
+    <- .findall(P, oferece(P, Servico), Participants);
        .print("Iniciando ", CnpId, " para ", Servico);
-       .print("Participants encontrados: ", Participants);
+       .print("Participants que ofercem ", Servico, " : ", Participants);
        !enviar_para_lista(CnpId,Participants, Servico).
 
 
@@ -71,7 +93,7 @@ contador_propostas(0).
        !verificar_total(CnpId, Servico, NovoN).
 
 +!verificar_total(CnpId, Servico, Quantidade)
-    <- .findall(P, participant(P), Participants);
+    <- .findall(P, oferece(P, Servico), Participants);
        .length(Participants,TotalParticipants);
        !verificar_se_completo(CnpId, Servico, Quantidade, TotalParticipants ).
 
@@ -84,7 +106,7 @@ contador_propostas(0).
     : Recebidas == Esperadas
     <- .print(CnpId,": propostas recebidas: ", Recebidas, " de ", Esperadas);
        .print(CnpId, ": todas as propostas para ", Servico, " foram recebidas." );
-        !selecionar_melhor(CnpId, Servico).
+       !selecionar_melhor(CnpId, Servico).
 
 
 +!selecionar_melhor(CnpId, Servico)

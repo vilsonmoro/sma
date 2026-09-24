@@ -15,13 +15,40 @@
 mas cnp {
 
     agent initiator: initiator.asl{
-        instances: 5
-        beliefs: total_participants(6)
+        instances: 2
+        beliefs: total_participants(2), total_cnps(3)
     }
     
-    agent participant: participant.asl{
-      instances: 6
+    /*agent participant: participant.asl{
+      instances: 2
+    }*/
+
+    agent transporte_normal: participant.asl{
+        beliefs: servico(transporte), estrategia(normal)
     }
+
+    agent transporte_economico: participant.asl{
+        beliefs: servico(transporte), estrategia(economica)
+    }
+
+     agent transporte_premium: participant.asl{
+        beliefs: servico(transporte), estrategia(premium)
+    }
+
+    agent limpeza_normal: participant.asl{
+        beliefs: servico(limpeza), estrategia(normal)
+    }
+
+    agent limpeza_economico: participant.asl{
+        beliefs: servico(limpeza), estrategia(economica)
+    }
+
+     agent limpeza_premium: participant.asl{
+        beliefs: servico(limpeza), estrategia(premium)
+    }
+
+   
+
 
 }
 
